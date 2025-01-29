@@ -27,6 +27,6 @@ Route::get('activateAccount/{id_user}', [AuthController::class,'activateAccount'
 ->where('id_user', '[0-9]+');
 
 //Definicion de rutas de la app con autenticacion
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'isActive'])->group(function () {
     Route::get('/home', [AuthController::class,'showHome'])->name('home');
 });

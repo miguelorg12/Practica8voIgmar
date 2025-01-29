@@ -59,6 +59,13 @@
                     @endif
                 </small>
             </div>
+            <!-- Recaptcha -->
+            <div class="g-recaptcha mt-2 col-12" data-sitekey="6LcOZMYqAAAAADMNqu0Dm-k13B4fTspeDiTSiSVt"></div>
+            <small class="form-text text-danger">
+                @if($errors->has('g-recaptcha-response'))
+                {{ $errors->first('g-recaptcha-response') }}
+                @endif
+            </small>
             <!-- Submit button -->
             <div class="col-12 justify-content-center d-flex mt-2">
                 <button type="submit" class="btn btn-primary col-12">Registrarte</button>

@@ -59,7 +59,9 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::MYSQL_ATTR_SSL_CA => env('DB_SSL_CA', 'C:/xampp/mysql/data/ca-cert.pem'),
+                PDO::MYSQL_ATTR_SSL_CERT => env('DB_SSL_CERT', 'C:/xampp/mysql/data/server-cert.pem'),
+                PDO::MYSQL_ATTR_SSL_KEY => env('DB_SSL_KEY', 'C:/xampp/mysql/data/server-key.pem'),
             ]) : [],
         ],
 

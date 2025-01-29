@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Log;   
 use Illuminate\Database\QueryException;
+use App\Rules\reCaptcha;
 use PDOException;
 use Exception;
 use App\Models\User;
@@ -37,10 +38,13 @@ class AuthController extends Controller
     */
     public function login(Request $request){
         try{
+            //Notificacion a slack
+            Log::channel('slack')->info('Intento de inicio de sesion ' . $request->email . ' desde ' . $request->ip());
             //Validacion del request
             $validator = Validator::make($request->all(), [
                 'email'=> 'required|email|max:255',
-                'password'=> 'required|max:255'
+                'password'=> 'required|max:255',
+                'g-recaptcha-response' => [new reCaptcha()],
             ]);
             //Si la validacion falla, se redirige al login con los errores
             if($validator->fails()){
@@ -117,6 +121,8 @@ class AuthController extends Controller
     */
     public function verificationCode(Request $request){
         try{
+            //Notificacion a slack
+            Log::channel('slack')->info('Intento de verificacion de correo ' . session('email') . ' desde ' . $request->ip());
             //Validacion del request
             $validator = Validator::make($request->all(), [
                 'code'=> 'required|numeric|digits:6'
@@ -179,12 +185,25 @@ class AuthController extends Controller
     */
     public function register(Request $request){
         try{
+            //Notificacion a slack
+            Log::channel('slack')->info('Intento de registro ' . $request->email . ' desde ' . $request->ip());
             //Validacion del request
             $validator = Validator::make($request->all(), [
-                'name'=> 'required|max:255',
-                'email'=> 'required|email|max:255',
-                'password'=> 'required|max:255|min:8|confirmed',
-                'password_confirmation'=> 'required|same:password'
+                'name' => [
+                    'required',
+                    'max:255',
+                    'regex:/^[a-zA-Z\s]+$/'
+                ],
+                'email' => 'required|email|max:255|unique:users',
+                'password' => [
+                    'required',
+                    'max:255',
+                    'min:8',
+                    'confirmed',
+                    'regex:/^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/'
+                ],
+                'password_confirmation' => 'required|same:password',
+                'g-recaptcha-response' => 'required|captcha',
             ]);
             //Si la validacion falla, se redirige al registro con los errores
             if($validator->fails()){
