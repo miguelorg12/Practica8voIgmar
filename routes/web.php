@@ -22,7 +22,9 @@ Route::get("/verifyCode", [AuthController::class,"showVerifyCodeForm"]);
 //Definicion de rutas Auth
 Route::post('loginUser', [AuthController::class,'login'])->name('loginUser');
 Route::post('verifyCodeUser', [AuthController::class,'verificationCode'])->name('verifyCodeUser');
+Route::post('resendCode', [AuthController::class, 'resendVerifyCode'])->name('resendCode');
 Route::post('registerUser', [AuthController::class,'register'])->name('registerUser');
+Route::get('logout', [AuthController::class,'logout'])->name('logout');
 Route::get('activateAccount/{id_user}', [AuthController::class,'activateAccount'])->name('activateAccount')
 ->where('id_user', '[0-9]+');
 

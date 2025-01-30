@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Exceptions;
-
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Session\TokenMismatchException;
+
 
 class Handler extends ExceptionHandler
 {
@@ -44,9 +48,34 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            if ($e instanceof NotFoundHttpException) {
-                return response()->view('Errors.404', [], 404);
-            }
+            
         });
+    }
+     /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $exception)
+    {
+        //Handle validacion de errores
+        if ($exception instanceof ValidationException) {
+            return redirect()->back()->withErrors($exception->errors())->withInput();
+        }
+
+        // Handle base de datos errores
+        if ($exception instanceof QueryException) {
+            return redirect()->back()->with('error', 'Error en el servidor, intenta de nuevo mas tarde.');
+        }
+
+         // Handle 404 errors
+         if ($exception instanceof NotFoundHttpException) {
+            return response()->view('Errors.404', [], 404);
+        }
+
+        // Handle 419 errors
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->route('login')->with('error', 'Tu sesion ha expirado vuelve a loggear tu cuenta.');
+        }
+         // Default behavior: pass the exception to Laravel's default handler
+        return parent::render($request, $exception);
     }
 }

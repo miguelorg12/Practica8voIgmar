@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use Http;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\Validation\Rule;
 
 class reCaptcha implements Rule
@@ -41,6 +41,6 @@ class reCaptcha implements Rule
      */
     public function message()
     {
-        return 'Need to check the reCaptcha.';
+        return 'Recaptcha invalid.';
     }
 }
