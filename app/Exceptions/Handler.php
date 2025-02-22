@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
 
         // Handle base de datos errores
         if ($exception instanceof QueryException) {
-            return redirect()->back()->with('error', 'Error en el servidor, intenta de nuevo mas tarde.');
+            return redirect()->back()->with('error', 'Error en el servidor, intenta de nuevo mas tarde.')->withInput();
         }
 
          // Handle 404 errors

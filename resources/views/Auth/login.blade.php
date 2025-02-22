@@ -19,6 +19,7 @@
 </style>
 @endsection
 @section('content')
+<title>Login</title>
 <div class="d-flex justify-content-center align-items-center vh-100 bg-dark">
     <div class="card p-4 shadow-lg " style="width: 30rem; animation: fadeIn 1.5s ease-in-out;">
         <div class="text-center">
@@ -50,7 +51,7 @@
 
             <!-- Recaptcha -->
             <label for="password mt-4">reCaptcha</label>
-            <div class="g-recaptcha col-12" data-sitekey="6LcOZMYqAAAAADMNqu0Dm-k13B4fTspeDiTSiSVt"></div>
+            <div class="g-recaptcha col-12" data-sitekey="{{env('RECAPTCHA_SITE_KEY')}}"></div>
             <small class="form-text text-danger">
                 @if($errors->has('g-recaptcha-response'))
                 {{ $errors->first('g-recaptcha-response') }}

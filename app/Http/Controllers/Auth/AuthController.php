@@ -45,6 +45,13 @@ class AuthController extends Controller
                 'email' => 'required|email|max:255',
                 'password' => 'required|max:255',
                 'g-recaptcha-response' => ['required', new reCaptcha],
+            ], [
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El correo electrónico debe ser una dirección válida.',
+                'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+                'password.required' => 'La contraseña es obligatoria.',
+                'password.max' => 'La contraseña no puede tener más de 255 caracteres.',
+                'g-recaptcha-response.required' => 'El reCaptcha es obligatorio.',
             ]);
             //Validar q el usuario exista
             $user = User::where('email', $request->email)->first();
@@ -111,6 +118,10 @@ class AuthController extends Controller
         // Validación del request
         $this->validate($request, [
             'code' => 'required|numeric|digits:6',
+        ], [
+            'code.required' => 'El código es obligatorio.',
+            'code.numeric' => 'El código debe ser un número.',
+            'code.digits' => 'El código debe tener exactamente 6 dígitos.',
         ]);
         // Validar que el correo esté en la sesión
         $user = User::where('email', session('email'))->first();
@@ -189,7 +200,8 @@ class AuthController extends Controller
                 'name' => [
                     'required',
                     'max:255',
-                    'regex:/^[a-zA-Z\s]+$/'
+                    'regex:/^[a-zA-Z\s]+$/',
+                    'string'
                 ],
                 'email' => 'required|email|max:255|unique:users',
                 'password' => [
@@ -201,6 +213,22 @@ class AuthController extends Controller
                 ],
                 'password_confirmation' => 'required|same:password',
                 'g-recaptcha-response' => ['required', new reCaptcha],
+            ], [
+                'name.required' => 'El nombre es obligatorio.',
+                'name.max' => 'El nombre no puede tener más de 255 caracteres.',
+                'name.regex' => 'El nombre solo debe contener letras y espacios.',
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'El correo electrónico debe ser una dirección válida.',
+                'email.max' => 'El correo electrónico no puede tener más de 255 caracteres.',
+                'email.unique' => 'El correo electrónico ya está registrado.',
+                'password.required' => 'La contraseña es obligatoria.',
+                'password.max' => 'La contraseña no puede tener más de 255 caracteres.',
+                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+                'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'password.regex' => 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.',
+                'password_confirmation.required' => 'La confirmación de la contraseña es obligatoria.',
+                'password_confirmation.same' => 'La confirmación de la contraseña no coincide.',
+                'g-recaptcha-response.required' => 'El reCaptcha es obligatorio.',
             ]);
             //Validar que el correo no exista
             $user = User::where('email', $request->email)->first();

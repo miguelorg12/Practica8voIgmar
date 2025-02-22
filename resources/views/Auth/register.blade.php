@@ -19,6 +19,7 @@
 </style>
 @endsection
 @section('content')
+<title>Register</title>
 <div class="d-flex justify-content-center align-items-center vh-100 bg-dark">
     <div class="card p-4 shadow-lg " style="width: 30rem; animation: fadeIn 1.5s ease-in-out;">
         <div class="text-center">
@@ -81,7 +82,7 @@
             </div>
             <!-- Recaptcha -->
             <label for="recaptcha mt-2">reCaptcha</label>
-            <div class="g-recaptcha mt-2 col-12" data-sitekey="6LcOZMYqAAAAADMNqu0Dm-k13B4fTspeDiTSiSVt"></div>
+            <div class="g-recaptcha mt-2 col-12" data-sitekey="{{env('RECAPTCHA_SITE_KEY')}}"></div>
             <small class="form-text text-danger">
                 @if($errors->has('g-recaptcha-response'))
                 {{ $errors->first('g-recaptcha-response') }}
@@ -101,85 +102,43 @@
 @endsection
 @section('js')
 <script>
-    // Validación del nombre
-    document.getElementById('name').addEventListener('input', function() {
-        const name = this.value;
-        const regex = /^[a-zA-Z\s]+$/;
-        const helpText = document.getElementById('nameHelp');
-        const validFeedback = this.nextElementSibling.nextElementSibling.nextElementSibling;
-        const invalidFeedback = validFeedback.nextElementSibling;
-        if (name === '') {
-            this.classList.remove('is-valid', 'is-invalid');
+    // Función para validar los campos
+    function validateField(field, regex, helpTextId, validFeedback, invalidFeedback) {
+        const value = field.value;
+        const helpText = document.getElementById(helpTextId);
+        if (value === '') {
+            field.classList.remove('is-valid', 'is-invalid');
             helpText.style.display = 'block';
             validFeedback.style.display = 'none';
             invalidFeedback.style.display = 'none';
-        } else if (regex.test(name)) {
-            this.classList.remove('is-invalid');
-            this.classList.add('is-valid');
+        } else if (regex.test(value)) {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
             helpText.style.display = 'none';
             validFeedback.style.display = 'block';
             invalidFeedback.style.display = 'none';
         } else {
-            this.classList.remove('is-valid');
-            this.classList.add('is-invalid');
+            field.classList.remove('is-valid');
+            field.classList.add('is-invalid');
             helpText.style.display = 'none';
             validFeedback.style.display = 'none';
             invalidFeedback.style.display = 'block';
         }
+    }
+
+    // Validación del nombre
+    document.getElementById('name').addEventListener('input', function() {
+        validateField(this, /^[a-zA-Z\s]+$/, 'nameHelp', this.nextElementSibling.nextElementSibling.nextElementSibling, this.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
     });
 
     // Validación del correo
     document.getElementById('email').addEventListener('input', function() {
-        const email = this.value;
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const helpText = document.getElementById('emailHelp');
-        const validFeedback = this.nextElementSibling.nextElementSibling.nextElementSibling;
-        const invalidFeedback = validFeedback.nextElementSibling;
-        if (email === '') {
-            this.classList.remove('is-valid', 'is-invalid');
-            helpText.style.display = 'block';
-            validFeedback.style.display = 'none';
-            invalidFeedback.style.display = 'none';
-        } else if (regex.test(email)) {
-            this.classList.remove('is-invalid');
-            this.classList.add('is-valid');
-            helpText.style.display = 'none';
-            validFeedback.style.display = 'block';
-            invalidFeedback.style.display = 'none';
-        } else {
-            this.classList.remove('is-valid');
-            this.classList.add('is-invalid');
-            helpText.style.display = 'none';
-            validFeedback.style.display = 'none';
-            invalidFeedback.style.display = 'block';
-        }
+        validateField(this, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'emailHelp', this.nextElementSibling.nextElementSibling.nextElementSibling, this.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
     });
 
     // Validación de la contraseña
     document.getElementById('password').addEventListener('input', function() {
-        const password = this.value;
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-        const helpText = document.getElementById('passwordHelp');
-        const validFeedback = this.nextElementSibling.nextElementSibling.nextElementSibling;
-        const invalidFeedback = validFeedback.nextElementSibling;
-        if (password === '') {
-            this.classList.remove('is-valid', 'is-invalid');
-            helpText.style.display = 'block';
-            validFeedback.style.display = 'none';
-            invalidFeedback.style.display = 'none';
-        } else if (regex.test(password)) {
-            this.classList.remove('is-invalid');
-            this.classList.add('is-valid');
-            helpText.style.display = 'none';
-            validFeedback.style.display = 'block';
-            invalidFeedback.style.display = 'none';
-        } else {
-            this.classList.remove('is-valid');
-            this.classList.add('is-invalid');
-            helpText.style.display = 'none';
-            validFeedback.style.display = 'none';
-            invalidFeedback.style.display = 'block';
-        }
+        validateField(this, /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/, 'passwordHelp', this.nextElementSibling.nextElementSibling.nextElementSibling, this.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
     });
 
     // Validación de la confirmación de la contraseña
@@ -234,6 +193,40 @@
                     Swal.showLoading()
                 }
             });
+        }
+    });
+
+    // Validar los campos al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validar nombre
+        validateField(document.getElementById('name'), /^[a-zA-Z\s]+$/, 'nameHelp', document.getElementById('name').nextElementSibling.nextElementSibling.nextElementSibling, document.getElementById('name').nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
+        // Validar correo
+        validateField(document.getElementById('email'), /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'emailHelp', document.getElementById('email').nextElementSibling.nextElementSibling.nextElementSibling, document.getElementById('email').nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
+        // Validar contraseña
+        validateField(document.getElementById('password'), /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/, 'passwordHelp', document.getElementById('password').nextElementSibling.nextElementSibling.nextElementSibling, document.getElementById('password').nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling);
+        // Validar confirmación de contraseña
+        const password = document.getElementById('password').value;
+        const passwordConfirmation = document.getElementById('password_confirmation').value;
+        const helpText = document.getElementById('passwordConfirmationHelp');
+        const validFeedback = document.getElementById('password_confirmation').nextElementSibling.nextElementSibling.nextElementSibling;
+        const invalidFeedback = validFeedback.nextElementSibling;
+        if (passwordConfirmation === '') {
+            document.getElementById('password_confirmation').classList.remove('is-valid', 'is-invalid');
+            helpText.style.display = 'block';
+            validFeedback.style.display = 'none';
+            invalidFeedback.style.display = 'none';
+        } else if (password === passwordConfirmation) {
+            document.getElementById('password_confirmation').classList.remove('is-invalid');
+            document.getElementById('password_confirmation').classList.add('is-valid');
+            helpText.style.display = 'none';
+            validFeedback.style.display = 'block';
+            invalidFeedback.style.display = 'none';
+        } else {
+            document.getElementById('password_confirmation').classList.remove('is-valid');
+            document.getElementById('password_confirmation').classList.add('is-invalid');
+            helpText.style.display = 'none';
+            validFeedback.style.display = 'none';
+            invalidFeedback.style.display = 'block';
         }
     });
 

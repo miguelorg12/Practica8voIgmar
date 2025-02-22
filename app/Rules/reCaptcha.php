@@ -41,6 +41,6 @@ class reCaptcha implements Rule
      */
     public function message()
     {
-        return 'Recaptcha invalid.';
+        return 'Recaptcha invalido.';
     }
 }
