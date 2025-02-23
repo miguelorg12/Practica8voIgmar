@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('Layouts.app')
 @section('css')
 <style>
     @keyframes fadeIn {

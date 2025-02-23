@@ -29,7 +29,7 @@ class AuthController extends Controller
     */
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
     /* Login user
     * Este metodo se encarga de validar el usuario y la contraseña, 
@@ -103,7 +103,7 @@ class AuthController extends Controller
 
     /* Show verification code form */
     public function showVerifyCodeForm(){
-        return view('auth.verification_code');
+        return view('Auth.verification_code');
     }
     /* Verify user
     * Recibe el codigo de verificacion y lo compara con el almacenado 
@@ -185,7 +185,7 @@ class AuthController extends Controller
     */
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return view('Auth.register');
     }
     /* Register user
     * Este metodo se encarga de validar los datos del usuario,
