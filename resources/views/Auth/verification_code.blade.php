@@ -37,6 +37,14 @@
                     @endif
                 </small>
             </div>
+            <!-- Recaptcha -->
+            <label for="password mt-4">reCaptcha</label>
+            <div class="g-recaptcha col-12" data-sitekey="{{env('RECAPTCHA_SITE_KEY')}}"></div>
+            <small class="form-text text-danger">
+                @if($errors->has('g-recaptcha-response'))
+                {{ $errors->first('g-recaptcha-response') }}
+                @endif
+            </small>
             <!-- Submit button -->
             <div class="col-12 justify-content-center d-flex mt-2">
                 <button type="submit" class="btn btn-primary col-12">Verificar Codigo</button>

@@ -118,10 +118,12 @@ class AuthController extends Controller
         // Validación del request
         $this->validate($request, [
             'code' => 'required|numeric|digits:6',
+            'g-recaptcha-response' => ['required', new reCaptcha],
         ], [
             'code.required' => 'El código es obligatorio.',
             'code.numeric' => 'El código debe ser un número.',
             'code.digits' => 'El código debe tener exactamente 6 dígitos.',
+            'g-recaptcha-response.required' => 'El reCaptcha es obligatorio.',            
         ]);
         // Validar que el correo esté en la sesión
         $user = User::where('email', session('email'))->first();

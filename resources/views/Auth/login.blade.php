@@ -65,6 +65,7 @@
             <!-- Register link -->
             <div class="text-center mt-3">
                 <p>¿No estas registrado? <a href="/register" class="text-decoration-none text-reset fw-bold">Registrate</a></p>
+                <p>Server 1</p>
             </div>
         </form>
     </div>
