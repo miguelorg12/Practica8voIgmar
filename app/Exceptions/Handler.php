@@ -56,18 +56,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        //Handle validacion de errores
+        // Handle validacion de errores
         if ($exception instanceof ValidationException) {
             return redirect()->back()->withErrors($exception->errors())->withInput();
         }
 
         // Handle base de datos errores
         if ($exception instanceof QueryException) {
-            return redirect()->back()->with('error', 'Error en el servidor, intenta de nuevo mas tarde.')->withInput();
+            return response()->view('Errors.500', [], 500);
         }
 
-         // Handle 404 errors
-         if ($exception instanceof NotFoundHttpException) {
+        // Handle 404 errors
+        if ($exception instanceof NotFoundHttpException) {
             return response()->view('Errors.404', [], 404);
         }
 
@@ -75,7 +75,13 @@ class Handler extends ExceptionHandler
         if ($exception instanceof TokenMismatchException) {
             return redirect()->route('login')->with('error', 'Tu sesion ha expirado vuelve a loggear tu cuenta.');
         }
-         // Default behavior: pass the exception to Laravel's default handler
+
+        // Handle 500 errors
+        if ($exception->getCode() === 500 || $exception instanceof \ErrorException) {
+            return response()->view('Errors.500', [], 500);
+        }
+
+        // Default behavior: pass the exception to Laravel's default handler
         return parent::render($request, $exception);
     }
 }

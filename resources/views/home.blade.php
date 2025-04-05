@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="text-center">
-        <h1 class="fw-bold">Bienvenido</h1>
+        <h1 class="fw-bold">Bienvenido 1</h1>
         <!--Logout button-->
         <div class="mt-4">
             <a href="{{ route('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
